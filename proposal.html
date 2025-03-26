@@ -16,13 +16,13 @@
   <p><a href="https://lucyw3857116.github.io/gale-shapley.github.io/">https://lucyw3857116.github.io/gale-shapley.github.io/</a></p>
 
   <h2>Summary</h2>
-  <p>We propose to parallelize the Gale-Shapley stable matching algorithm on a multicore CPU, and optionally GPU, platform. Our implementation aims to reduce runtime when compared to the traditional O(n²) sequential version by leveraging parallelism during the proposal and update phases of the Parallel Iterative Improvement (PII) algorithm. Additional enhancements, such as smart initiation and cycle detection, can be evaluated as well. </p>
+  <p>We propose to parallelize the Gale-Shapley stable matching algorithm on a multicore CPU, and optionally GPU, platform. Our implementation aims to reduce runtime when compared to the traditional O(n<sup>2</sup>) sequential version by leveraging parallelism during the proposal and update phases of the Parallel Iterative Improvement (PII) algorithm. Additional enhancements, such as smart initiation and cycle detection, can be evaluated as well. </p>
   <h2>Background</h2>
   <p>The Stable Matching Problem, also known as the Stable Marriage Problem, was first introduced by Gale and Shapley in 1962. It describes a scenario in which two groups of the same size, traditionally men and women, rank each other in order of preference. The goal is to find a one-to-one <b>stable</b>b> match for all individuals. The matches are considered stable if no two individuals would both rather be matched with each other than with their current partners. Gale Shapley proved that a stable matching always exists, regardless of the input preference lists.</p>
 
-  <p>The classic Gale-Shapley algorithm is an iterative, deterministic solution that guarantees a stable matching in O(n2) time for n participants per group. In each round, each unmatched proposer (e.g., a man) submits a proposal to the highest-ranked participant on their preference list who has not yet rejected them. Each acceptor (e.g., a woman) reviews all proposals she receives, and tentatively accepts her most-preferred offer and rejects the rest. This continues until all participants are matched. Although the algorithm has a simple concept, this algorithm is inherently sequential, as each round depends on the updated matchings and responses from the previous round. </p>
+  <p>The classic Gale-Shapley algorithm is an iterative, deterministic solution that guarantees a stable matching in O(n<sup>2</sup>) time for n participants per group. In each round, each unmatched proposer (e.g., a man) submits a proposal to the highest-ranked participant on their preference list who has not yet rejected them. Each acceptor (e.g., a woman) reviews all proposals she receives, and tentatively accepts her most-preferred offer and rejects the rest. This continues until all participants are matched. Although the algorithm has a simple concept, this algorithm is inherently sequential, as each round depends on the updated matchings and responses from the previous round. </p>
 
-  <p>Despite its simplicity and theoretical guarantees, the sequential nature of the Gale-Shapley algorithm presents challenges to scaling the algorithm for large input sizes or real-time applications (e.g., live matching platforms or high-speed scheduling). This has led to multiple efforts to parallelize the stable matching problem. One approach is the Parallel Iterative Improvement (PII) algorithm, which begins with a random initial (possibly unstable) matching and refines it by repeatedly identifying and resolving unstable pairs. Although this method can achieve average-case runtimes O(n log(n)) using O(n2) processors, it only converges <b>90%</b> of the time. To address these limitations, the PII-SC algorithm combines cycle detection and smart initialization, significantly improving the success rate by reducing the failure to converge to less than 10<sup>-7</sup>.</p>
+  <p>Despite its simplicity and theoretical guarantees, the sequential nature of the Gale-Shapley algorithm presents challenges to scaling the algorithm for large input sizes or real-time applications (e.g., live matching platforms or high-speed scheduling). This has led to multiple efforts to parallelize the stable matching problem. One approach is the Parallel Iterative Improvement (PII) algorithm, which begins with a random initial (possibly unstable) matching and refines it by repeatedly identifying and resolving unstable pairs. Although this method can achieve average-case runtimes O(n log(n)) using O(n<sup>2</sup>) processors, it only converges <b>90%</b> of the time. To address these limitations, the PII-SC algorithm combines cycle detection and smart initialization, significantly improving the success rate by reducing the failure to converge to less than 10<sup>-7</sup>.</p>
 
   <p>We aim to implement and investigate tradeoffs in synchronization, communication patterns, and scalability for the sequential, PII, and PII-SC algorithms. </p>
 
@@ -35,7 +35,7 @@
       </ul>
     <li><strong>Processor Scalability and Resource Constraints</strong></li>
       <ul>
-        <li>The Parallel Iterative Improvement (PII) variant of Gale-Shapley achieves good runtime by assuming the availability of O(n2) processors. However, this is impractical for most real-world systems, where the number of available CPU threads or GPU cores is much smaller. Adapting these highly parallel algorithms to real hardware requires either reducing the number of concurrent threads or finding a method to map logical threads to physical cores while maintaining performance.</li>
+        <li>The Parallel Iterative Improvement (PII) variant of Gale-Shapley achieves good runtime by assuming the availability of O(n<sup>2</sup>) processors. However, this is impractical for most real-world systems, where the number of available CPU threads or GPU cores is much smaller. Adapting these highly parallel algorithms to real hardware requires either reducing the number of concurrent threads or finding a method to map logical threads to physical cores while maintaining performance.</li>
       </ul>
     <li><strong>Synchronization and Communication Overhead</strong></li>
       <ul>
@@ -96,7 +96,7 @@
     </ul>
     <li>Thread Efficiency under Sublinear Thread Counts</li>
     <ul>
-      <li>We will experiment with configurations where the number of threads is significantly lower than n2, using batching and shared work queues to simulate real-world hardware constraints. This will help us study how the algorithm degrades under limited resources. </li>
+      <li>We will experiment with configurations where the number of threads is significantly lower than n<sup>2</sup>, using batching and shared work queues to simulate real-world hardware constraints. This will help us study how the algorithm degrades under limited resources. </li>
     </ul>
     <li>Data Sensitivity Experiments</li>
     <ul>
