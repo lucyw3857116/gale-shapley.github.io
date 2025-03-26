@@ -49,18 +49,46 @@
 
   <h3>Plan to Achieve</h3>
   <ul>
-    <li>Implement a sequential Gale-Shapley algorithm in C++ for benchmarking.</li>
-    <li>Implement a parallel version of the PII algorithm using thread-level parallelism.</li>
-    <li>Measure speedup, scalability, and convergence on various input sizes and thread counts.</li>
-    <li>Validate correctness of the output using stability checks and reference outputs.</li>
+    <li>Sequential Baseline Implementation</li>
+    <ul>
+      <li>We will implement the classical Gale-Shapley algorithm in C++ as a correctness reference and performance baseline. This implementation will help us verify the correctness of our parallel versions and evaluate the relative speedup gained through parallelism.</li>
+    </ul>
+    <li>Parallel Implementation using PII Algorithm</li>
+    <ul>
+      <li>We will implement a parallel version of the Gale-Shapley algorithm based on the Parallel Iterative Improvement (PII) approach. This version will use thread-level parallelism (e.g., via pthreads or OpenMP) to resolve unstable pairs in parallel. The challenge will be to design a thread-safe system that maintains correctness despite concurrent updates.</li>
+    </ul>
+    <li>Correctness and Convergence Validation</li>
+    <ul>
+      <li>We will develop a validation tool that checks for stability in the final matching output (i.e., ensures no blocking pairs remain). We will also benchmark the number of iterations and convergence behavior under varying input sizes and thread counts.</li>
+    </ul>
+    <li>Performance and Scalability Benchmarking</li>
+    <ul>
+      <li>We will measure runtime and speedup across multiple configurations (e.g., varying n, thread count, input distribution). Our goal is to evaluate parallel scalability, pthread efficiency, and overheads using profiling tools (e.g., perf, timers, etc.).</li>
+    </ul>
+    <li>Poster and Visualization</li>
+    <ul>
+      <li>We will create visualizations of the matching evolution and performance metrics (e,g., convergence curves, speedup vs. thread count) to clearly present our findings in the final poster and presentation.</li>
+    </ul>
   </ul>
 
   <h3>Hope to Achieve</h3>
   <ul>
-    <li>Extend to the PII-SC algorithm with smart initiation and cycle detection.</li>
-    <li>Implement and evaluate a CUDA-based GPU version of the algorithm.</li>
-    <li>Explore performance under fewer-than-O(n²) threads using work batching.</li>
-    <li>Visualize performance trends and produce graphs for final report/poster.</li>
+    <li>Implement Smart Initiation and Cycle Detection (PII-SC)</li>
+    <ul>
+      <li>We will extend our PII implementation with enhancements described in the PII-SC algorithm. Smart initiation will reduce the number of iterations needed to converge, and cycle detection will ensure stability even in difficult matching configurations. We aim to reduce convergence failures and bring success rates close to 100%. </li>
+    </ul>
+    <li>Exploring GPU Implementation Using CUDA</li>
+    <ul>
+      <li>If time permits, we will design a CUDA Implementation that distributes work across thousands of GPU threads. This will allow us to investigate fine-grained parallelism and compare it against our multicore CPU implementation, particularly in terms of memory access and synchronization overhead. </li>
+    </ul>
+    <li>Thread Efficiency under Sublinear Thread Counts</li>
+    <ul>
+      <li>We will experiment with configurations where the number of threads is significantly lower than n^2, using batching and shared work queues to simulate real-world hardware constraints. This will help us study how the algorithm degrades under limited resources.</li>
+    </ul>
+    <li>Data Sensitivity Experiments</li>
+    <ul>
+      <li>We will vary the structure of the preference lists (e.g., full rankings vs. partial rankings, biased preferences vs. random) and analyze how these factors influence performance and convergence. This would deepen our understanding of input-sensitive behavior in parallel systems.</li>
+    </ul>
   </ul>
 
   <h2>Platform Choice</h2>
