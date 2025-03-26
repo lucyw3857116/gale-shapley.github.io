@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Proposal - Gale-Shapley</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Project Proposal</h1>
+
+  <h2>Title</h2>
+  <p><strong>Parallelizing the Gale-Shapley Algorithm</strong><br>
+  Rhea Kripalani and Lucy Wang</p>
+
+  <h2>URL</h2>
+  <p><a href="https://lucyw3857116.github.io/gale-shapley.github.io/">https://lucyw3857116.github.io/gale-shapley.github.io/</a></p>
+
+  <h2>Summary</h2>
+  <p>We propose to parallelize the Gale-Shapley stable matching algorithm on a multicore CPU and optionally GPU platform. Our implementation aims to reduce runtime compared to the traditional O(n²) sequential version by leveraging parallelism during the proposal and update phases of the algorithm. We will explore and compare multiple approaches, including the Parallel Iterative Improvement (PII) algorithm and enhancements like smart initiation and cycle detection, analyzing both correctness and speedup.</p>
+
+  <h2>Background</h2>
+  <p>The Stable Matching Problem, also known as the Stable Marriage Problem, was first introduced by Gale and Shapley in 1962. It describes a scenario in which two equally sized groups, traditionally men and women, rank each other in order of preference, and the goal is to find a one-to-one matching such that no two individuals would both rather be matched with each other than with their current partners. Such a matching is considered stable, and Gale and Shapley proved that a stable matching always exists, regardless of the input preference lists.</p>
+
+  <p>The classic Gale-Shapley algorithm is an iterative, deterministic solution that guarantees a stable matching in O(n²) time for n participants per group. In each round, each unmatched proposer submits a proposal to the highest-ranked individual on their preference list who has not yet rejected them. Each acceptor reviews all proposals received, tentatively accepting their most-preferred offer and rejecting the rest. This continues until all participants are matched. Although conceptually simple, this algorithm is inherently sequential, as each round depends on the updated matchings from the previous round.</p>
+
+  <p>Despite its simplicity and theoretical guarantees, the sequential nature of the Gale-Shapley algorithm presents an obstacle to scaling for large input sizes or real-time applications (e.g., live matching platforms or high-speed scheduling). This has led to multiple efforts to parallelize the stable matching problem. One approach is the Parallel Iterative Improvement (PII) algorithm, which begins with an initial (possibly unstable) matching and refines it by repeatedly identifying and resolving unstable pairs. Although this method can achieve average-case runtimes of O(n log n) using O(n²) processors, it does not always guarantee convergence unless additional mechanisms (like cycle detection or smart initialization) are added.</p>
+
+  <p>These alternative methods, such as the PII-SC algorithm described in White & Lu (2013), extend the basic PII strategy using O(n²) processors and achieve O(n log n) average runtime. Extensions like smart initiation and cycle detection significantly improve success rates and reduce iteration counts. This project aims to implement and compare several variants of the stable matching algorithm — sequential, PII, and PII-SC — on parallel platforms. In doing so, we will investigate tradeoffs in synchronization, communication patterns, and scalability, directly tying into class topics like parallel algorithms, workload distribution, and system bottlenecks.</p>
+
+  <h2>The Challenge</h2>
+  <p>Parallelizing the Gale-Shapley algorithm presents several non-trivial challenges:</p>
+  <ul>
+    <li><strong>Dependency chains</strong>: The algorithm is inherently sequential due to round-by-round state updates, making naive parallelization incorrect.</li>
+    <li><strong>High thread count</strong>: The PII algorithm requires O(n²) processors to achieve significant parallelism, which exceeds the number of threads on typical CPUs.</li>
+    <li><strong>Communication overhead</strong>: Unstable pair detection and matching updates require synchronization and communication between threads.</li>
+    <li><strong>Correctness vs. performance</strong>: Ensuring that matchings remain stable while maximizing speedup requires careful thread and memory management.</li>
+  </ul>
+  <p>We will explore ways to mitigate these issues, including batching proposals, using fine-grained locks or atomic operations, and experimenting with memory layouts for better data locality. We will also evaluate whether shared-memory multicore systems or massively parallel GPUs (e.g., via CUDA) are more effective for different stages of the workload.</p>
+
+  <h2>Resources</h2>
+  <p>We will base our parallel implementation on the PII and PII-SC algorithms, as described in:</p>
+  <ul>
+    <li>White & Lu, <em>An Improved Parallel Iterative Algorithm for Stable Matching</em>, SC13 Poster.</li>
+    <li>Jones, B. C. (2019). <em>gale-shapley</em> [Source code]. GitHub. <a href="https://github.com/bryancjones/gale-shapley">https://github.com/bryancjones/gale-shapley</a></li>
+  </ul>
+  <p>We will implement the project in C++ and explore both CPU and GPU parallelization using pthreads/OpenMP, OpenMPI for multicore CPU, and optionally CUDA. We plan to use GHC lab machines and PSC machines for scalability testing. Input data (preference lists) will be randomly generated with controlled seeds for reproducibility.</p>
+
+  <h2>Goals and Deliverables</h2>
+
+  <h3>Plan to Achieve</h3>
+  <ul>
+    <li>Implement a sequential Gale-Shapley algorithm in C++ for benchmarking.</li>
+    <li>Implement a parallel version of the PII algorithm using thread-level parallelism.</li>
+    <li>Measure speedup, scalability, and convergence on various input sizes and thread counts.</li>
+    <li>Validate correctness of the output using stability checks and reference outputs.</li>
+  </ul>
+
+  <h3>Hope to Achieve</h3>
+  <ul>
+    <li>Extend to the PII-SC algorithm with smart initiation and cycle detection.</li>
+    <li>Implement and evaluate a CUDA-based GPU version of the algorithm.</li>
+    <li>Explore performance under fewer-than-O(n²) threads using work batching.</li>
+    <li>Visualize performance trends and produce graphs for final report/poster.</li>
+  </ul>
+
+  <h2>Platform Choice</h2>
+  <p>We will begin with a multicore CPU implementation using pthreads or OpenMP in C++. These tools offer strong control over shared memory and thread behavior. If time permits, we will implement a CUDA version to take advantage of high thread counts on GPU hardware, and compare its performance. CPUs may be better for correctness-sensitive operations due to lower synchronization overhead and better debugging support.</p>
+
+  <h2>Schedule</h2>
+  <ul>
+    <li><strong>Week 1 (March 24 – March 28)</strong>: Finalize project details, implement sequential baseline, set up benchmarking tools.</li>
+    <li><strong>Week 2 (March 31 – April 4)</strong>: Implement parallel PII algorithm, test correctness.</li>
+    <li><strong>Week 3 (April 7 – April 11)</strong>: Add smart initiation and cycle detection (PII-SC), test large cases.</li>
+    <li><strong>Week 4 (April 14 – April 18)</strong>: Profile performance, run experiments, begin milestone writeup and poster.</li>
+    <li><strong>Week 5 (April 21 – April 25)</strong>: Polish implementation, finalize results, complete poster and final report.</li>
+  </ul>
+
+</body>
+</html>
