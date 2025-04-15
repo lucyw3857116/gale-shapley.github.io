@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Milestone Report - Gale-Shapley</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Project Proposal</h1>
 
+  <h2>Title</h2>
+  <p><strong>Milestone Report</strong><br>
+  Rhea Kripalani and Lucy Wang</p>
+
+  <h2>Summary</h2>
+  <p>In the past two and a half weeks, we finalized the problem we are trying to parallelize and implemented two methods of parallelization (shared address space among threads and message passing between processors). </p>
+  <p>Problem Statement: Given a full preference list for each man and woman (if there are 2*n participants, each participant has n people in their preference list), we want to write a parallelized Gale-Shapley algorithm that will create a stable pairing for each participant. </p>
+  <p>We iterated over whether or not to require a full preference list after coming across a GitHub project that generates data for the Gale-Shapley algorithm and allows the user to specify how long the preference lists in the dataset should be. When we used the data generated from this with our preference list size being less than the number of men or women, our algorithm was not able to find a stable match for everyone, so we decided to stick with using full preference lists for now, as that is the way it works in most applications anyway.</p>
+  <p>Our original plan was to implement the PII and PII-SC algorithms as defined in this <a href="https://github.com/bryancjones/gale-shapley">poster</a>, but we realized that these algorithms are much more complex than we previously thought. We spent a week trying to implement and debug the PII algorithm, but we couldn’t get it to converge on stable pairings for everyone. To ensure that we don’t spend all our time debugging one algorithm and potentially not have anything to write about for our report, we decided to pivot to a different parallelization of the algorithm and implement it in a shared address space and message passing. Our next goal is to implement Gale-Shapley with CUDA. </p>
+
+  <h2>Updated Schedule</h2>
+  <ul>
+    <li><strong>Week 1 (March 24 – March 28)</strong>: Finalize problem formulation, implement sequential Gale-Shapley, and set up benchmarking tools.</li>
+    <li><strong>Week 2 (March 31 – April 4)</strong>: Tried to implement the PII algorithm, implemented shared address space parallelization, validated correctness.</li>
+    <li><strong>Week 3 (April 7 – April 11)</strong>: Generated large data test cases, implemented message passing parallelization, tested on large data test cases.</li>
+    <li><strong>Week 4.0 (April 14 – April 16)</strong>: Lucy - Optimize message passing parallelization, Rhea - Write CUDA implementation, look into PII-SC algorithms again.</li>
+    <li><strong>Week 4.5 (April 16 – April 18)</strong>: Rhea - Optimize CUDA implementation, Lucy - Profile the performance of all algorithms.</li>
+    <li><strong>Week 5.0 (April 21 – April 23)</strong>: Run experiments to compare all algorithms (experiments will be split among us), finalize results.</li>
+    <li><strong>Week 5.5 (April 23 – April 25)</strong>: Complete the final report and poster.</li>
+    
+  </ul>
+  
+  <h2>Goals and Deliverables</h2>
+
+  <h3>From the Initial Proposal</h3>
+  <ul>
+    <li>Plan to achieve:</li>
+    <ul>
+      <li>Sequential Baseline Implementation</li>
+      <ul>
+        <li>Completed</li>
+      </ul>
+      <li>Correctness and Convergence Validation</li>
+      <ul>
+        <li>Completed</li>
+      </ul>
+      <li>Parallel Implementation using PII and PII-SC Algorithm</li>
+      <ul>
+        <li>We moved this to hope to achieve.</li>
+        <li>Instead of implementing the PII and PII-SC Algorithm, we plan to implement Gale-Shapley using shared address space, message passing, and CUDA</li>
+      </ul>
+      <li>Performance and Scalability Benchmarking</li>
+      <ul>
+        <li>This will be done once all implementations have been completed</li>
+      </ul>
+      <li>Poster and Visualization</li>
+      <ul>
+        <li>This will be done once we have analyzed our data</li>
+      </ul>
+    </ul>
+    <li>Nice to have</li>
+    <ul>
+      <li>Explore PII and PII-SC Algorithms</li>
+      <ul>
+        <li>Once we finish the CUDA algorithm, we can look into whether it would be worth our time to continue working on this algorithm or if we should simply optimize our current algorithms.</li>
+      </ul>
+      <li>Thread Efficiency under Sublinear Thread Counts</li>
+      <ul>
+        <li>We are already using thread configurations for significantly lower thread counts. This is more applicable for the PII-SC algorithm.</li>
+      </ul>
+      <li>Data Sensitivity Experiments</li>
+      <ul>We will look into different manipulations of the preference list and their effect on the algorithm. We can vary the length by using partial rankings or by using biased preferences.</ul>
+    </ul>
+  </ul>
+  <p>In summary, we did have to move some of our goals around. Specifically, we moved the PII and PII-SC Algorithm deliverable to the “nice to haves” section. We replaced this deliverable with the shared address space, message passing, and CUDA implementations. We should be able to complete our new set of goals. Depending on how much time the CUDA implementation takes us, we might be able to achieve one of our “nice to haves” deliverables.</p>
+
+  <h3>New Goals</h3>
+  <ul>
+    <li>Plan to achieve:</li>
+    <ul>
+      <li>CUDA implementation of Gale-Shapley</li>
+      <li>Optimizations of all algorithms</li>
+      <li>Performance analysis</li>
+    </ul>
+    <li>Nice to have:</li>
+    <ul>
+      <li>Implement PII or PII-SC Algorithm</li>
+      <li>Manipulate input data (change the length of preference lists)</li>
+    </ul>
+  </ul>
+
+  <h2>Poster Sessions</h2>
+  <p>Our goal would be to show a graph of the speedups of our different implementations and address the differences and benefits of using each type of parallelization regarding the Gale-Shapley Algorithm. We will also describe how we completed our parallel implementation and discuss potential future implementations or improvements we would have pursued if we had more time.</p>
+
+  <h2>Concerns</h2>
+  <p>Currently, as we try to generate larger datasets to test our implementation, we exceed our disk quota. We have deleted extra files that aren’t useful from our AFS, yet the largest dataset we can test our implementation on is currently n=2000 with a full preference list. This isn’t enough to compare to real applications. For example, the Gale-Shapley algorithm matches medical students to residencies, and there are around 52,000 students who need to be matched. Because we can’t generate such large datasets, we are concerned that we won’t be able to see the benefits of parallelization due to the extra overhead.</p>
+  
+
+</body>
+</html>
