@@ -92,6 +92,75 @@
   <h2>Poster Sessions</h2>
   <p>Our goal would be to show a graph of the speedups of our different implementations and address the differences and benefits of using each type of parallelization regarding the Gale-Shapley Algorithm. We will also describe how we completed our parallel implementation and discuss potential future implementations or improvements we would have pursued if we had more time.</p>
 
+  <h2>Preliminary Results</h2>
+  <p>Sequential Gale-Shapley Algorithm:</p>
+  <table border="1">
+    <tr>
+    <th><strong>sequential</strong></th>
+    <th>initialization time</th>
+    <th>computation time</th>
+    </tr>
+    <tr><td>master/100_100</td><td>0.012341196</td><td>0.000221127</td></tr>
+    <tr><td>random/100_100</td><td>0.001781225</td><td>0.000025335</td></tr>
+    <tr><td>shuffle/100_100</td><td>0.001931884</td><td>0.000029665</td></tr>
+    <tr><td>master/500_500</td><td>0.023034474</td><td>0.000691897</td></tr>
+    <tr><td>random/500_500</td><td>0.023155006</td><td>0.00072703</td></tr>
+    <tr><td>shuffle/500_500</td><td>0.022265412</td><td>0.000586448</td></tr>
+    <tr><td>master/1000_1000</td><td>0.085145133</td><td>0.003029481</td></tr>
+    <tr><td>random/1000_1000</td><td>0.085594264</td><td>0.002465578</td></tr>
+    <tr><td>shuffle/1000_1000</td><td>0.084825035</td><td>0.002196202</td></tr>
+    <tr><td>2000_2000</td><td>0.370548774</td><td>0.009627199</td></tr>
+  </table>
+  <p>We also have the initialization and computation times of the OpenMP shared address space version for all the test cases listed above. For simplicity, we only included data for n = 1000 and n = 2000 test cases.</p>
+  <table border="1">
+    <tr>
+      <th>n=1000</th>
+      <th>initialization time</th>
+      <th>computation time</th>
+    </tr>
+    <tr><td>1 Thread</td><td>0.096207367</td><td>0.006100127</td></tr>
+    <tr><td>2 Threads</td><td>0.085109435</td><td>0.005300165</td></tr>
+    <tr><td>4 Threads</td><td>0.086066042</td><td>0.005146181</td></tr>
+    <tr><td>8 Threads</td><td>0.084503596</td><td>0.006054297</td></tr>
+  </table>
+
+  <table border="1">
+    <tr>
+      <th>n=2000</th>
+      <th>initialization time</th>
+      <th>computation time</th>
+    </tr>
+    <tr><td>1 Thread</td><td>0.387654479</td><td>0.026912896</td></tr>
+    <tr><td>2 Threads</td><td>0.370879461</td><td>0.021700406</td></tr>
+    <tr><td>4 Threads</td><td>0.369560469</td><td>0.019854909</td></tr>
+    <tr><td>8 Threads</td><td>0.369961981</td><td>0.022176926</td></tr>
+  </table>
+  <p>Similarly, we have the results for the OpenMPI message passing version with the same test cases.</p>
+  <table border="1">
+    <tr>
+      <th>n=1000</th>
+      <th>initialization time</th>
+      <th>computation time</th>
+    </tr>
+    <tr><td>1 Thread</td><td>0.365146032</td><td>0.004490897</td></tr>
+    <tr><td>2 Threads</td><td>0.3604769875</td><td>0.003742539</td></tr>
+    <tr><td>4 Threads</td><td>0.3132831853</td><td>0.00417506475</td></tr>
+    <tr><td>8 Threads</td><td>0.3411113851</td><td>0.006089136625</td></tr>
+  </table>
+
+  <table border="1">
+    <tr>
+      <th>n=2000</th>
+      <th>initialization time</th>
+      <th>computation time</th>
+    </tr>
+    <tr><td>1 Thread</td><td>0.646786017</td><td>0.021756559</td></tr>
+    <tr><td>2 Threads</td><td>0.64432722</td><td>0.0192913835</td></tr>
+    <tr><td>4 Threads</td><td>0.606660147</td><td>0.022002529</td></tr>
+    <tr><td>8 Threads</td><td>0.6338493458</td><td>0.03287053375</td></tr>
+  </table>
+  <p>There is not much speedup from one thread to eight. Instead, our computation time actually increases a little. Additionally, we noticed that the computation time for our parallel algorithms is larger than our sequential algorithm. We believe this is because there is a lot more overhead with the parallel algorithms, and our datasets aren’t big enough to make the parallelization overhead worth it. The difference in times could also be because we use different approaches to the Gale-Shapley algorithm to fit each method of parallelization. We hope to see clearer trends with larger datasets.</p>
+
   <h2>Concerns</h2>
   <p>Currently, as we try to generate larger datasets to test our implementation, we exceed our disk quota. We have deleted extra files that aren’t useful from our AFS, yet the largest dataset we can test our implementation on is currently n=2000 with a full preference list. This isn’t enough to compare to real applications. For example, the Gale-Shapley algorithm matches medical students to residencies, and there are around 52,000 students who need to be matched. Because we can’t generate such large datasets, we are concerned that we won’t be able to see the benefits of parallelization due to the extra overhead.</p>
   
